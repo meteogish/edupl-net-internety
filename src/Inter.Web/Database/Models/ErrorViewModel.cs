@@ -1,6 +1,6 @@
 using System;
 
-namespace Internety.Web.Models
+namespace Inter.Web.Database.Models
 {
     public class ErrorViewModel
     {

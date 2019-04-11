@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using Inter.Web.Database.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -32,6 +35,20 @@ namespace Inter.Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.AddTransient<IDbConnection>(p=>new SqlConnection(@"Integrated Security = SSPI; Persist Security Info = False; Initial Catalog = PanKanapka; Data Source =.\SQLEXPRESS;"));
+
+            TransactionsRepository repo = new TransactionsRepository();
+            repo.GetTransactionsInfo(new Database.Models.TransactionFilter(){
+                FinishDate = DateTime.Now.AddDays(2),
+                //StartDate = DateTime.Now,
+                InternetTypeIds = new List<long>(){
+                    1, 2, 3
+                },
+                OfficeId = 4,
+                WorkerIds = new List<long>() {
+                    4, 65, 78
+                }
+            });
 
             services.AddMvc()
                 .AddNewtonsoftJson();

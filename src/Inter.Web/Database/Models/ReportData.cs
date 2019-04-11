@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Internety.Web.Models
+namespace Inter.Web.Database.Models
 {
     public class ReportData
     {
