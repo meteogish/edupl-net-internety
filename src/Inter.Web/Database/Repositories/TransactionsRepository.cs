@@ -6,10 +6,14 @@ using System.Threading.Tasks;
 using Dapper;
 using Inter.Web.Database.Models;
 
-namespace Inter.Web.Database.Repository
+namespace Inter.Web.Database.Repositories
 {
     public class TransactionsRepository
     {
+        // public TransactionsRepository(IDbConnection conn)
+        // {
+            
+        // }
         public IEnumerable<TransactionInfoResult> GetTransactionsInfo(TransactionFilter filter)
         {
             var builder = new SqlBuilder();
