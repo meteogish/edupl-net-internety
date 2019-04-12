@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,10 +11,11 @@ namespace Inter.Web.Database.Repositories
 {
     public class TransactionsRepository
     {
-        // public TransactionsRepository(IDbConnection conn)
-        // {
-            
-        // }
+        IDbConnection conn;
+        public TransactionsRepository(IDbConnection connection)
+        {
+            conn=connection;
+        }
         public IEnumerable<TransactionInfoResult> GetTransactionsInfo(TransactionFilter filter)
         {
             var builder = new SqlBuilder();
@@ -57,15 +59,16 @@ join Office o on o.Office_ID=w.Office_ID
             
             if(filter.InternetTypeIds.Any())
             {
-                builder.Where("where it.InternetType_ID in @InternetTypeIds");
+                builder.Where("it.InternetType_ID in @InternetTypeIds");
             }
 
             if(filter.WorkerIds.Any())
             {
-                builder.Where("where w.Worker_ID in @WorkerIds");
+                builder.Where("w.Worker_ID in @WorkerIds");
             }
             
             string sql = selector.RawSql;
+            var transInfo=conn.Query(sql, filter);
             Debug.WriteLine(sql);
             string sql2 = builder.ToString();
             // Assert.That(selector.RawSql, Is.EqualTo("select * from table WHERE FirstName = @FirstName AND City = @City\n"));

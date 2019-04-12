@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Inter.Web.Database.Repositories;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace Inter.Web
 {
@@ -32,20 +34,20 @@ namespace Inter.Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            // services.AddTransient<IDbConnection>(p=>new SqlConnection(@"Integrated Security = SSPI; Persist Security Info = False; Initial Catalog = PanKanapka; Data Source =.\SQLEXPRESS;"));
-
-            TransactionsRepository repo = new TransactionsRepository();
-            repo.GetTransactionsInfo(new Database.Models.TransactionFilter(){
-                FinishDate = DateTime.Now.AddDays(2),
-                //StartDate = DateTime.Now,
-                InternetTypeIds = new List<long>(){
-                    1, 2, 3
-                },
-                OfficeId = 4,
-                WorkerIds = new List<long>() {
-                    4, 65, 78
-                }
-            });
+            services.AddTransient<IDbConnection>(p=>new SqlConnection(@"Integrated Security = SSPI; Persist Security Info = False; Initial Catalog = Internety; Data Source =.\SQLEXPRESS;"));
+            services.AddScoped<TransactionsRepository>();
+            // TransactionsRepository repo = new TransactionsRepository();
+            // repo.GetTransactionsInfo(new Database.Models.TransactionFilter(){
+            //     FinishDate = DateTime.Now.AddDays(2),
+            //     //StartDate = DateTime.Now,
+            //     InternetTypeIds = new List<long>(){
+            //         1, 2, 3
+            //     },
+            //     OfficeId = 4,
+            //     WorkerIds = new List<long>() {
+            //         4, 65, 78
+            //     }
+            // });
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
