@@ -14,7 +14,7 @@ join Internet i on s.Internet_ID=i.Internet_ID
 join InternetType it on it.InternetType_ID=i.InternetType_ID
 join Workers w on w.Worker_ID=t.Worker_ID
 join Office o on o.Office_ID=w.Office_ID
-where t.Date between @begindate and @enddate
-where o.Office_ID = @officeId
-where it.InternetType_ID in @inernetTypeId
-where w.Worker_ID in @workerId
+where t.Date between '2019-05-05' and '2019-05-23'
+and o.Office_ID = 1
+and it.InternetType_ID in (3)
+and w.Worker_ID in (1)

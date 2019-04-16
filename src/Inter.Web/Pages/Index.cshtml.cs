@@ -14,14 +14,14 @@ namespace Inter.Web.Pages
         {
             TransactionsRepository repo = repos;
             repo.GetTransactionsInfo(new Database.Models.TransactionFilter(){
-                FinishDate = DateTime.Now.AddDays(2),
-                StartDate = DateTime.Now.AddDays(-1000),
+                StartDate = new DateTime(2019, 05, 05),
+                FinishDate = new DateTime(2019, 05, 19),
                 InternetTypeIds = new List<long>(){
-                   2
+                   3
                 },
-                OfficeId = 2,
+                OfficeId = 1,
                 WorkerIds = new List<long>() {
-                    2
+                    1
                 }
             });   
         }
