@@ -67,12 +67,8 @@ join Office o on o.Office_ID=w.Office_ID
                 builder.Where("w.Worker_ID in @WorkerIds");
             }
             
-            string sql = selector.RawSql;
-            var transInfo=conn.Query(sql, filter);
-            Debug.WriteLine(sql);
-            string sql2 = builder.ToString();
-            // Assert.That(selector.RawSql, Is.EqualTo("select * from table WHERE FirstName = @FirstName AND City = @City\n"));
-            return null;
+            var transInfo=conn.Query<TransactionInfoResult>(selector.RawSql, filter);
+            return transInfo;
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Inter.Web.Database.Models
         public String OfficeName { get; set; }
         public long WorkerId { get; set; }
         public String WorkerName { get; set; }
-        public String WorkerSurnem { get; set; }
+        public String WorkerSurname { get; set; }
         public long InternetTypeId { get; set; }
         public String InternetType { get; set; }
         public double Price { get; set; }
