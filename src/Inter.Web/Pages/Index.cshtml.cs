@@ -13,7 +13,7 @@ namespace Inter.Web.Pages
     {
         private TransactionsRepository _transactionRepository;
 
-        public IEnumerable<TransactionInfoResult> tableData;
+        public IEnumerable<TransactionInfoResult> TableData { get; set; }
 
         public IndexModel(TransactionsRepository transactionRepository)
         {
@@ -22,7 +22,7 @@ namespace Inter.Web.Pages
 
         public void OnGet()
         {
-            tableData = _transactionRepository
+            TableData = _transactionRepository
                 .GetTransactionsInfo(new Database.Models.TransactionFilter(){
                     StartDate = new DateTime(2019, 05, 05),
                     FinishDate = new DateTime(2019, 05, 19),
