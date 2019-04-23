@@ -4,33 +4,42 @@
     ViewData["Title"] = "Home page";
 }
 
+
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-    <table id="t01">  
+    <div class="center-block">
+        @Html.ListBoxFor(m => m.Offices.Keys, new MultiSelectList(Model.Offices.Select(kvp => new SelectListItem(kvp.Value, $"{kvp.Key}")), "Key", "Value"))
+    </div>
+
+    <table id="t01" class="table table-sm table-striped table-bordered">  
         <thead>  
-            <!-- <th></th>   -->
-            <th>Username</th>  
-            <th>Password</th>  
-            <th>FullName</th>  
-            <th>EmailID</th>  
+            <th>Transaction ID</th>
+            <th>Service</th>  
+            <th>Worker</th>
+            <th>Office</th>
+            <th>Price</th>  
         </thead>  
 @foreach (var item in Model.TableData)  
-{  
+{
         <tr>  
-            <td>  
-@item.WorkerName  
-</td>  
-            <td>  
-@item.WorkerSurname  
-</td>  
-            <td>  
+                        <td>  
 @item.TransactionId  
-</td>  
+</td> 
+<td>
+    @item.InternetType
+</td>
             <td>  
+@($"{item.WorkerName} {item.WorkerSurname}")
+</td>  
+<td>  
+@item.OfficeName  
+</td>
+ 
+<td>  
 @item.Price  
 </td>
-        </tr>  
+</tr>  
   
 }  
   

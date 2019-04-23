@@ -13,7 +13,9 @@ namespace Inter.Web.Pages
     {
         private TransactionsRepository _transactionRepository;
 
-        public IEnumerable<TransactionInfoResult> TableData { get; set; }
+        public IEnumerable<TransactionInfoResult> TableData { get; private set; }
+
+        public IDictionary<long, string> Offices { get; private set; } 
 
         public IndexModel(TransactionsRepository transactionRepository)
         {
@@ -34,6 +36,13 @@ namespace Inter.Web.Pages
                         1
                     }
                 });
+            
+            Offices = TableData
+                .Select(td => (officeId: td.OfficeId, officeName: td.OfficeName))
+                .Distinct()
+                .Concat(new[] {12L, 13L, 14L}.Select(x => (officeId: x, officeName: x.ToString())))
+                .ToDictionary(keyFor => keyFor.officeId, valueFor => valueFor.officeName);
+            
         }
     }
 }
