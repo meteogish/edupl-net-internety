@@ -7,6 +7,7 @@ using Inter.Web.Database.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
 
 namespace Inter.Web.Pages
 {
@@ -22,15 +23,19 @@ namespace Inter.Web.Pages
 
         public List<SelectListItem> InternetTypes { get; set; }
 
-        [BindProperty]
-        public TransactionFilter Filter { get; set; }
-
-
         public IndexModel(TransactionsRepository transactionRepository)
         {
             _transactionRepository = transactionRepository;
+        }
 
-            Filter = new Database.Models.TransactionFilter()
+        public void OnGet(string passed)
+        {
+            TransactionFilter filter;
+            string f = (string) TempData["Filter"];
+
+            if(f == null)
+            {
+                filter = new Database.Models.TransactionFilter()
                 {
                     StartDate = new DateTime(2019, 05, 05),
                     FinishDate = new DateTime(2019, 05, 19),
@@ -42,58 +47,63 @@ namespace Inter.Web.Pages
                         1
                     }
                 };
-        }
+            }
+            else {
+                filter = JsonConvert.DeserializeObject<TransactionFilter>(f);
+            }
 
-        public void OnGet()
-        {
             TableData = _transactionRepository
-                .GetTransactionsInfo(Filter);
+                .GetTransactionsInfo(filter);
 
             Offices = new SelectList(TableData
-                .Select(td => new OfficeViewModel(td.OfficeId, td.OfficeName))
+                .Select(td => new ViewModel(td.OfficeId, td.OfficeName))
                 .Distinct()
                 .Concat(new[] {
-                    new OfficeViewModel(12L, "12"),
-                    new OfficeViewModel(13L, "13"),
-                    new OfficeViewModel(14L, "14")}
-                ), nameof(OfficeViewModel.Id), nameof(OfficeViewModel.Name));
+                    new ViewModel(12L, "12"),
+                    new ViewModel(13L, "13"),
+                    new ViewModel(14L, "14")}
+                ), nameof(ViewModel.Id), nameof(ViewModel.Name));
 
             Workers = TableData
-                .Select(td => new OfficeViewModel(td.WorkerId, $"{td.WorkerName} {td.WorkerSurname}"))
+                .Select(td => new ViewModel(td.WorkerId, $"{td.WorkerName} {td.WorkerSurname}"))
                 .Distinct()
                 .Concat(new[] {
-                    new OfficeViewModel(12L, "12"),
-                    new OfficeViewModel(13L, "13"),
-                    new OfficeViewModel(14L, "14")}
+                    new ViewModel(12L, "12"),
+                    new ViewModel(13L, "13"),
+                    new ViewModel(14L, "14")}
                 ).Select(vm => new SelectListItem(vm.Name, vm.Id.ToString())).ToList();
 
             InternetTypes = TableData
-            .Select(td => new OfficeViewModel(td.InternetTypeId, td.InternetType))
+            .Select(td => new ViewModel(td.InternetTypeId, td.InternetType))
             .Distinct()
             .Concat(new[] {
-                    new OfficeViewModel(12L, "12"),
-                    new OfficeViewModel(13L, "13"),
-                    new OfficeViewModel(14L, "14")}
+                    new ViewModel(12L, "12"),
+                    new ViewModel(13L, "13"),
+                    new ViewModel(14L, "14")}
             ).Select(vm => new SelectListItem(vm.Name, vm.Id.ToString())).ToList();
         }
 
-        public IActionResult OnPost(string[] workerIds, string[] internetTypesIds)
+        public IActionResult OnPost(string officeId, string[] workerIds, string[] internetTypesIds)
         {
-            Filter.WorkerIds = workerIds.Select(str => long.Parse(str)).ToList();
-            Filter.InternetTypeIds = internetTypesIds.Select(str => long.Parse(str)).ToList();
-            Filter.StartDate = new DateTime(2019, 05, 05);
-            Filter.FinishDate = new DateTime(2019, 05, 19);
-            
-            return RedirectToAction("OnGet");
+            TransactionFilter Filter = new TransactionFilter() {
+            OfficeId = long.Parse(officeId),
+            WorkerIds = workerIds.Select(str => long.Parse(str)).ToList(),
+            InternetTypeIds = internetTypesIds.Select(str => long.Parse(str)).ToList(),
+            StartDate = new DateTime(2019, 05, 05),
+            FinishDate = new DateTime(2019, 05, 19)
+            };
+
+            TempData["Filter"] = JsonConvert.SerializeObject(Filter);
+            return RedirectToPage("Index");
         }
     }
 
-    public class OfficeViewModel
+    public class ViewModel
     {
         public long Id { get; set; }
         public string Name { get; set; }
 
-        public OfficeViewModel(long id, string name)
+        public ViewModel(long id, string name)
         {
             Id = id;
             Name = name;
