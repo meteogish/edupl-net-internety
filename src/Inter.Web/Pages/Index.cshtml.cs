@@ -6,6 +6,7 @@ using Inter.Web.Database.Models;
 using Inter.Web.Database.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Inter.Web.Pages
 {
@@ -15,17 +16,22 @@ namespace Inter.Web.Pages
 
         public IEnumerable<TransactionInfoResult> TableData { get; private set; }
 
-        public IDictionary<long, string> Offices { get; private set; } 
+        public SelectList Offices { get; private set; }
+
+        public List<SelectListItem> Workers { get; set; }
+
+        public List<SelectListItem> InternetTypes { get; set; }
+
+        [BindProperty]
+        public TransactionFilter Filter { get; set; }
+
 
         public IndexModel(TransactionsRepository transactionRepository)
         {
-            _transactionRepository = transactionRepository;   
-        }
+            _transactionRepository = transactionRepository;
 
-        public void OnGet()
-        {
-            TableData = _transactionRepository
-                .GetTransactionsInfo(new Database.Models.TransactionFilter(){
+            Filter = new Database.Models.TransactionFilter()
+                {
                     StartDate = new DateTime(2019, 05, 05),
                     FinishDate = new DateTime(2019, 05, 19),
                     InternetTypeIds = new List<long>(){
@@ -35,14 +41,62 @@ namespace Inter.Web.Pages
                     WorkerIds = new List<long>() {
                         1
                     }
-                });
-            
-            Offices = TableData
-                .Select(td => (officeId: td.OfficeId, officeName: td.OfficeName))
+                };
+        }
+
+        public void OnGet()
+        {
+            TableData = _transactionRepository
+                .GetTransactionsInfo(Filter);
+
+            Offices = new SelectList(TableData
+                .Select(td => new OfficeViewModel(td.OfficeId, td.OfficeName))
                 .Distinct()
-                .Concat(new[] {12L, 13L, 14L}.Select(x => (officeId: x, officeName: x.ToString())))
-                .ToDictionary(keyFor => keyFor.officeId, valueFor => valueFor.officeName);
+                .Concat(new[] {
+                    new OfficeViewModel(12L, "12"),
+                    new OfficeViewModel(13L, "13"),
+                    new OfficeViewModel(14L, "14")}
+                ), nameof(OfficeViewModel.Id), nameof(OfficeViewModel.Name));
+
+            Workers = TableData
+                .Select(td => new OfficeViewModel(td.WorkerId, $"{td.WorkerName} {td.WorkerSurname}"))
+                .Distinct()
+                .Concat(new[] {
+                    new OfficeViewModel(12L, "12"),
+                    new OfficeViewModel(13L, "13"),
+                    new OfficeViewModel(14L, "14")}
+                ).Select(vm => new SelectListItem(vm.Name, vm.Id.ToString())).ToList();
+
+            InternetTypes = TableData
+            .Select(td => new OfficeViewModel(td.InternetTypeId, td.InternetType))
+            .Distinct()
+            .Concat(new[] {
+                    new OfficeViewModel(12L, "12"),
+                    new OfficeViewModel(13L, "13"),
+                    new OfficeViewModel(14L, "14")}
+            ).Select(vm => new SelectListItem(vm.Name, vm.Id.ToString())).ToList();
+        }
+
+        public IActionResult OnPost(string[] workerIds, string[] internetTypesIds)
+        {
+            Filter.WorkerIds = workerIds.Select(str => long.Parse(str)).ToList();
+            Filter.InternetTypeIds = internetTypesIds.Select(str => long.Parse(str)).ToList();
+            Filter.StartDate = new DateTime(2019, 05, 05);
+            Filter.FinishDate = new DateTime(2019, 05, 19);
             
+            return RedirectToAction("OnGet");
+        }
+    }
+
+    public class OfficeViewModel
+    {
+        public long Id { get; set; }
+        public string Name { get; set; }
+
+        public OfficeViewModel(long id, string name)
+        {
+            Id = id;
+            Name = name;
         }
     }
 }
