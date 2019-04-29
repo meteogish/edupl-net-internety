@@ -9,8 +9,8 @@ namespace Inter.Web.Database.Models
     {
         public DateTime? StartDate { get; set; }
         public DateTime? FinishDate { get; set; }
-        public long OfficeId { get; set; }
-        public List<long> WorkerIds { get; set; }
-        public List<long> InternetTypeIds { get; set; }
+        public long? OfficeId { get; set; }
+        public IEnumerable<long> WorkerIds { get; set; }
+        public IEnumerable<long> InternetTypeIds { get; set; }
     }
 }

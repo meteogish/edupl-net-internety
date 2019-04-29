@@ -47,14 +47,19 @@ namespace Inter.Web.Database.Repositories
 
             if(filter.FinishDate == null)
             {
-                filter.FinishDate = DateTime.Now;
+                filter.FinishDate = DateTime.Now.AddDays(200);
             }
 
             if(filter.StartDate == null)
             {
-                filter.StartDate = DateTime.MinValue;
+                filter.StartDate = DateTime.Now.AddDays(-200);
             }
-            builder.Where("o.Office_ID = @OfficeId");
+
+            if(filter.OfficeId.HasValue)
+            {
+                builder.Where("o.Office_ID = @OfficeId");
+            }
+
             builder.Where("t.Date between @StartDate and @FinishDate");
             
             if(filter.InternetTypeIds.Any())

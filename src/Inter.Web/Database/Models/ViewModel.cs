@@ -10,5 +10,9 @@ namespace Inter.Web.Database.Models
             Id = id;
             Name = name;
         }
+
+        override public bool Equals(object obj) => obj is ViewModel other && other.Id == this.Id && other.Name == this.Name;
+
+        override public int GetHashCode() => Id.GetHashCode() ^ (Name?.GetHashCode() ?? -1.GetHashCode());
     }
 }

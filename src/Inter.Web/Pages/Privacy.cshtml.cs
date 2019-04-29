@@ -44,5 +44,23 @@ namespace Inter.Web.Pages
             WorkersIds = new SelectList(data.WorkerIds, nameof(ViewModel.Id), nameof(ViewModel.Name));
             ServiceIds = new SelectList(data.ServiceIds, nameof(ViewModel.Id), nameof(ViewModel.Name));
         }
+        public IActionResult OnPost(DateTime date, double price, string[] clientId, string[] workersId, string[] serviceId)
+        {
+            //ViewModel cid = new ViewModel(ClientIds.Select(ciid=>long.Parse(ciid.Value)).First(), ClientIds.Select(ciid=>ciid.Text).First());
+            //List<ViewModel> lcid = new List<ViewModel>();
+            //lcid.Add(cid);
+            
+            _transactionsRepository.AddTransaction(
+            new TransactionCreateData()
+            {
+                ClientIds = clientId.Select(cid=>new ViewModel(long.Parse(cid),null)).ToList(),
+                WorkerIds = workersId   .Select(wid=> new ViewModel(long.Parse(wid), null)).ToList(),
+                ServiceIds = serviceId.Select(wid=> new ViewModel(long.Parse(wid), null)).ToList(),
+                Date=date,
+                Price=price
+            });
+
+            return RedirectToPage("Index");
+        }
     }
 }

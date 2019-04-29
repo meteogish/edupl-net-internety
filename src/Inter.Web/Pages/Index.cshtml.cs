@@ -23,6 +23,10 @@ namespace Inter.Web.Pages
 
         public List<SelectListItem> InternetTypes { get; set; }
 
+        public DateTime StartDate { get; set; } = DateTime.Now;
+
+        public DateTime FinishDate { get; set; } = DateTime.Now;
+
         public IndexModel(TransactionsRepository transactionRepository)
         {
             _transactionRepository = transactionRepository;
@@ -37,15 +41,11 @@ namespace Inter.Web.Pages
             {
                 filter = new Database.Models.TransactionFilter()
                 {
-                    StartDate = new DateTime(2019, 05, 05),
-                    FinishDate = new DateTime(2019, 05, 19),
-                    InternetTypeIds = new List<long>(){
-                    3
-                    },
+                    StartDate = null,
+                    FinishDate = null,
+                    InternetTypeIds = Enumerable.Empty<long>(),
                     OfficeId = 1,
-                    WorkerIds = new List<long>() {
-                        1
-                    }
+                    WorkerIds = Enumerable.Empty<long>()
                 };
             }
             else {
@@ -55,42 +55,32 @@ namespace Inter.Web.Pages
             TableData = _transactionRepository
                 .GetTransactionsInfo(filter);
 
-            Offices = new SelectList(TableData
+            var dt = TableData
                 .Select(td => new ViewModel(td.OfficeId, td.OfficeName))
-                .Distinct()
-                .Concat(new[] {
-                    new ViewModel(12L, "12"),
-                    new ViewModel(13L, "13"),
-                    new ViewModel(14L, "14")}
-                ), nameof(ViewModel.Id), nameof(ViewModel.Name));
+                .Distinct();
+
+            Offices = new SelectList(dt
+                , nameof(ViewModel.Id), nameof(ViewModel.Name));
 
             Workers = TableData
                 .Select(td => new ViewModel(td.WorkerId, $"{td.WorkerName} {td.WorkerSurname}"))
                 .Distinct()
-                .Concat(new[] {
-                    new ViewModel(12L, "12"),
-                    new ViewModel(13L, "13"),
-                    new ViewModel(14L, "14")}
-                ).Select(vm => new SelectListItem(vm.Name, vm.Id.ToString())).ToList();
+                .Select(vm => new SelectListItem(vm.Name, vm.Id.ToString())).ToList();
 
             InternetTypes = TableData
             .Select(td => new ViewModel(td.InternetTypeId, td.InternetType))
             .Distinct()
-            .Concat(new[] {
-                    new ViewModel(12L, "12"),
-                    new ViewModel(13L, "13"),
-                    new ViewModel(14L, "14")}
-            ).Select(vm => new SelectListItem(vm.Name, vm.Id.ToString())).ToList();
+            .Select(vm => new SelectListItem(vm.Name, vm.Id.ToString())).ToList();
         }
 
-        public IActionResult OnPost(string officeId, string[] workerIds, string[] internetTypesIds)
+        public IActionResult OnPost(DateTime startDate, DateTime finishDate, string officeId, string[] workerIds, string[] internetTypesIds)
         {
             TransactionFilter Filter = new TransactionFilter() {
             OfficeId = long.Parse(officeId),
             WorkerIds = workerIds.Select(str => long.Parse(str)).ToList(),
             InternetTypeIds = internetTypesIds.Select(str => long.Parse(str)).ToList(),
-            StartDate = new DateTime(2019, 05, 05),
-            FinishDate = new DateTime(2019, 05, 19)
+            StartDate = startDate,
+            FinishDate = finishDate
             };
 
             TempData["Filter"] = JsonConvert.SerializeObject(Filter);
