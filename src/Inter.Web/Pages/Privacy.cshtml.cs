@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Inter.Web.Database.Models;
@@ -12,6 +13,10 @@ namespace Inter.Web.Pages
 {
     public class PrivacyModel : PageModel
     {
+        public double Price { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime Date { get; set; } = DateTime.Now;
         public SelectList WorkersIds { get; set; }
         public SelectList ClientIds { get; set; }
         public SelectList ServiceIds { get; set; }
