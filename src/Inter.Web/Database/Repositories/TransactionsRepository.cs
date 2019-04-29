@@ -81,10 +81,28 @@ namespace Inter.Web.Database.Repositories
                 var transInfo = conn.Execute(insert, new {
                     Date = createData.Date,
                     Price = createData.Price,
-                    ServiceId = createData.ServiceId.First(),
-                    ClientId = createData.ClientId.First(),
-                    WorkerId = createData.WorkerId.First()
+                    ServiceId = createData.ServiceIds.First().Id,
+                    ClientId = createData.ClientIds.First().Id,
+                    WorkerId = createData.WorkerIds.First().Id
                 });
+            }
+        }
+
+        public TransactionCreateData GetTransactionCreateData()
+        {
+            using(conn)
+            {
+                var serviceIds = conn.Query<ViewModel>("select distinct Service_ID as Id, SaleName as Name from Services");
+
+                var clientIds = conn.Query<ViewModel>("select distinct Client_ID as Id, Name + ' ' + Surname as Name from Client");
+
+                var workerIds = conn.Query<ViewModel>("select distinct Worker_ID as Id, Name + ' ' + Surname as Name from Workers");
+
+                return new TransactionCreateData() {
+                    ClientIds = clientIds,
+                    WorkerIds = workerIds,
+                    ServiceIds = serviceIds
+                };
             }
         }
     }
