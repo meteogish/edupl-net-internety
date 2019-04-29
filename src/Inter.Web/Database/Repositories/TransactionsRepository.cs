@@ -74,20 +74,17 @@ namespace Inter.Web.Database.Repositories
 
         public void AddTransaction(TransactionCreateData createData)
         {
-            string insert = @"Insert into transactions values(@Date, @Price, @Service_ID, @Client_ID, @Worker_ID)";
+            string insert = @"Insert into transactions values(@Date, @Price, @ServiceId, @ClientId, @WorkerId)";
 
             using (conn)
             {
-                var transInfo = conn.Execute(insert,
-                new
-                {
+                var transInfo = conn.Execute(insert, new {
                     Date = createData.Date,
-                    Service_ID = createData.ServiceId,
-                    Client_ID = createData.ClientId,
-                    Worker_ID = createData.WorkerId,
-                    Price = (double)99.00
+                    Price = createData.Price,
+                    ServiceId = createData.ServiceId.First(),
+                    ClientId = createData.ClientId.First(),
+                    WorkerId = createData.WorkerId.First()
                 });
-
             }
         }
     }
