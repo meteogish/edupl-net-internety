@@ -23,9 +23,9 @@ namespace Inter.Web.Pages
 
         public List<SelectListItem> InternetTypes { get; set; }
 
-        public DateTime StartDate { get; set; } = DateTime.Now;
+        public DateTime StartDate { get; set; }
 
-        public DateTime FinishDate { get; set; } = DateTime.Now;
+        public DateTime FinishDate { get; set; }
 
         public IndexModel(TransactionsRepository transactionRepository)
         {
@@ -44,12 +44,15 @@ namespace Inter.Web.Pages
                     StartDate = null,
                     FinishDate = null,
                     InternetTypeIds = Enumerable.Empty<long>(),
-                    OfficeId = 1,
+                    OfficeId = null,
                     WorkerIds = Enumerable.Empty<long>()
                 };
+                StartDate = FinishDate = DateTime.Now;
             }
             else {
                 filter = JsonConvert.DeserializeObject<TransactionFilter>(f);
+                StartDate = filter.StartDate ?? DateTime.Now;
+                FinishDate = filter.FinishDate ?? DateTime.Now;
             }
 
             TableData = _transactionRepository
@@ -86,5 +89,17 @@ namespace Inter.Web.Pages
             TempData["Filter"] = JsonConvert.SerializeObject(Filter);
             return RedirectToPage("Index");
         }
+        // public IActionResult OnReset()
+        // {
+        //     TempData["Filter"] = new Database.Models.TransactionFilter()
+        //         {
+        //             StartDate = null,
+        //             FinishDate = null,
+        //             InternetTypeIds = Enumerable.Empty<long>(),
+        //             OfficeId = null,
+        //             WorkerIds = Enumerable.Empty<long>()
+        //         };
+        //     return RedirectToPage("Index");
+        // }
     }
 }

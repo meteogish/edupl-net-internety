@@ -45,12 +45,12 @@ namespace Inter.Web.Database.Repositories
             //note the 'where' in-line comment is required, it is a replacement token
             // var selector = builder.AddTemplate("select * from table /**where**/");
 
-            if(filter.FinishDate == null)
+            if(filter.FinishDate == null || filter.FinishDate == DateTime.MinValue)
             {
                 filter.FinishDate = DateTime.Now.AddDays(200);
             }
 
-            if(filter.StartDate == null)
+            if(filter.StartDate == null || filter.StartDate == DateTime.MinValue)
             {
                 filter.StartDate = DateTime.Now.AddDays(-200);
             }

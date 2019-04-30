@@ -52,13 +52,18 @@
         </div>
     </form>
 
+    <form method="reset" class="form-inline">
+        <input name="Reset" type="submit" class="btn btn-danger" value="Clear" >
+    </form>
+
     <table id="t01" class="table table-sm table-striped table-bordered">  
         <thead>  
             <th>Transaction ID</th>
             <th>Service</th>  
             <th>Worker</th>
             <th>Office</th>
-            <th>Price</th>  
+            <th>Date</th>
+            <th>Aggregated Price</th>
         </thead>  
         
 @foreach (var item in Model.TableData)  
@@ -76,7 +81,9 @@
 <td>  
 @item.OfficeName  
 </td>
- 
+ <td>  
+@item.Date.ToString("yyyy-MM-dd") 
+</td>
 <td>  
 @item.Price  
 </td>

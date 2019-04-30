@@ -20,5 +20,25 @@ values ('InternetDlaDziadka+',3, 25),
 insert into Workers values ('Bogdan', 'Byczek', 666,666555444, 'Kohanin 22', '99827133221', '11-11-2010', 1)
 insert into Transactions values ('05-05-2019',99, 1, 1, 1)
 
-use master
+
+
+
+go
+insert into Office values ('BiurowaSuperOffice', 'Lodz, Stefanowskiego 45')
+GO
+insert into Workers values ('Yevhenii', 'Kyshko', 234,767, 'Kohanin 22', '99827133221', '11-11-2010', 1)
+go
+
+insert into Workers values ('Damian', 'Maciejka', 234,767, 'Kohanin 22', '99827133221', '11-11-2010', 2)
+go
+
+insert into Workers values ('Stefan', 'Fajny', 234,767, 'Kohanin 22', '99827133221', '11-11-2010', 2)
+GO
+insert into Client values ('Nowy', 'Stary', 'Kasztanowo 22', '99827188822');
+GO
+insert into Services 
+values ('SuperInternet', 3, 25)
+GO
+
+
 
