@@ -1,0 +1,47 @@
+﻿@page
+@model PrivacyModel
+@{
+    ViewData["Title"] = "Add new transaction";
+}
+
+<div class="text-center">
+    <h1 class="display-4">@ViewData["Title"]</h1>
+
+    <form method="post">
+
+        <div class="form-group row">
+            <label for="date" class="col-sm-6 col-form-label" style="text-align:right;">Date:</label>
+            <div style="text-align:left;">
+                <input class="form-control" name="date" type="date" asp-for="Date" id="date" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="price" class="col-sm-6 col-form-label" style="text-align:right;">Price:</label>
+            <div style="text-align:left;">
+                <input class="form-control" name="price" asp-for="Price" id="price" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="client" class="col-sm-6 col-form-label" style="text-align:right;">Client:</label>
+            <div style="text-align:left;">
+                <select class="form-control" name="clientId" asp-items="Model.ClientIds" id="client"></select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="service" class="col-sm-6 col-form-label" style="text-align:right;">Service:</label>
+            <div style="text-align:left;">
+                <select class="form-control" name="serviceId" asp-items="Model.ServiceIds" id="service"></select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="worker" class="col-sm-6 col-form-label" style="text-align:right;">Worker:</label>
+            <div style="text-align:left;">
+                <select class="form-control" name="workersId" asp-items="Model.WorkersIds" id="worker"></select>
+            </div>
+        </div>
+        <div>
+            <input name="Update filter" type="submit" class="btn btn-primary" value="Add transaction" />
+        </div>
+            
+</form>
+</div>

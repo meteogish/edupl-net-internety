@@ -1,28 +1,54 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Transactions";
 }
 
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Transactions</h1>
     
-    <form method="post">
-        <input name="Update filter" type="submit" class="btn btn-default" />
-        <input name="startDate" type="date" asp-for="StartDate" />
-        <input name="finishDate" type="date" asp-for="FinishDate" />
-        <div class="center-block">
-            <select name="officeId" asp-items="Model.Offices"></select>
-        </div>
+    <form method="post" class="form-inline">
+        <div class="form-group mb-2">
+            <label for="StartDate" class="col-form-label" style="margin-right:5px;">Start date:</label>
+            <input class="form-control" name="startDate" type="date" asp-for="StartDate" id="StartDate" style="margin-right:15px;"/>
 
-        <div class="center-block">
-            <select name="workerIds" asp-items="@Model.Workers" multiple="true"></select>
+            <label for="FinishDate" class="col-form-label" style="margin-right:5px;">Finish date:</label>
+            <input class="form-control" name="finishDate" type="date" asp-for="FinishDate" id="FinishDate" style="margin-right:15px;" />
         </div>
+        <div class="form-group mb-2">
+            <label for="office" class="col-form-label" style="margin-right:5px;">Office: </label>
+            <select class="form-control" name="officeId" asp-items="Model.Offices" id="office" style="margin-right:15px;"></select>
 
-        <div class="center-block">
-            <select name="internetTypesIds" asp-items="@Model.InternetTypes" multiple="true"></select>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#worker').multiselect({
+                        nonSelectedText: 'Select worker',
+                        includeSelectAllOption: true,
+                        buttonWidth: 250,
+                        enableFiltering: true
+                    });
+                });
+            </script>
+
+            <label for="worker">Worker: </label>
+            <select class="form-control" name="workerIds" asp-items="@Model.Workers" multiple="multiple" id="worker"></select>
+
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#internetType').multiselect({
+                        nonSelectedText: 'Select type of internet',
+                        includeSelectAllOption: true,
+                        buttonWidth: 250,
+                        enableFiltering: true
+                    });
+                });
+            </script>
+
+            <label for="internetType">Internet type: </label>
+            <select name="internetTypesIds" asp-items="@Model.InternetTypes" multiple="multiple" id="internetType" style="margin-right:15px;"></select>
+
+            <input name="Update filter" type="submit" class="btn btn-primary" value="Filter" >
         </div>
     </form>
 
