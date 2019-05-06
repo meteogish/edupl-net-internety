@@ -47,11 +47,13 @@ namespace Inter.Web.Pages
                     OfficeId = null,
                     WorkerIds = Enumerable.Empty<long>()
                 };
-                StartDate = FinishDate = DateTime.Now;
+                StartDate = DateTime.Now.AddDays(-30);
+                FinishDate = DateTime.Now;
+
             }
             else {
                 filter = JsonConvert.DeserializeObject<TransactionFilter>(f);
-                StartDate = filter.StartDate ?? DateTime.Now;
+                StartDate = filter.StartDate ?? DateTime.Now.AddDays(-30);
                 FinishDate = filter.FinishDate ?? DateTime.Now;
             }
 
@@ -91,17 +93,5 @@ namespace Inter.Web.Pages
             TempData["Filter"] = JsonConvert.SerializeObject(Filter);
             return RedirectToPage("Index");
         }
-        // public IActionResult OnReset()
-        // {
-        //     TempData["Filter"] = new Database.Models.TransactionFilter()
-        //         {
-        //             StartDate = null,
-        //             FinishDate = null,
-        //             InternetTypeIds = Enumerable.Empty<long>(),
-        //             OfficeId = null,
-        //             WorkerIds = Enumerable.Empty<long>()
-        //         };
-        //     return RedirectToPage("Index");
-        // }
     }
 }

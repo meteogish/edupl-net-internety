@@ -7,11 +7,11 @@
 
 <div class="text-center">
     <h1 class="display-4">Transactions</h1>
-    
+
     <form method="post" class="form-inline">
         <div class="form-group mb-2">
             <label for="StartDate" class="col-form-label" style="margin-right:5px;">Start date:</label>
-            <input class="form-control" name="startDate" type="date" asp-for="StartDate" id="StartDate" style="margin-right:15px;"/>
+            <input class="form-control" name="startDate" type="date" asp-for="StartDate" id="StartDate" style="margin-right:15px;" />
 
             <label for="FinishDate" class="col-form-label" style="margin-right:5px;">Finish date:</label>
             <input class="form-control" name="finishDate" type="date" asp-for="FinishDate" id="FinishDate" style="margin-right:15px;" />
@@ -48,78 +48,90 @@
             <label for="internetType">Internet type: </label>
             <select name="internetTypesIds" asp-items="@Model.InternetTypes" multiple="multiple" id="internetType" style="margin-right:15px;"></select>
 
-            <input name="Update filter" type="submit" class="btn btn-primary" value="Filter" >
+            <input name="Update filter" type="submit" class="btn btn-primary" value="Filter">
         </div>
     </form>
 
     <form method="reset" class="form-inline">
-        <input name="Reset" type="submit" class="btn btn-danger" value="Clear" >
+        <input name="Reset" type="submit" class="btn btn-danger" value="Clear">
     </form>
 
-    <table id="t01" class="table table-sm table-striped table-bordered">  
-        <thead>  
-            <th>Transaction ID</th>
-            <th>Service</th>  
-            <th>Worker</th>
-            <th>Office</th>
-            <th>Date</th>
-            <th>Aggregated Price</th>
-            <th>Count for the period</th>
-        </thead>  
-        
-@foreach (var group in Model.TableData)  
-{
-    @foreach (var item in group)
-    {
-                <tr>  
-                                <td>  
-        @item.TransactionId  
-        </td> 
-        <td>
-            @item.InternetType
-        </td>
-                    <td>  
-        @($"{item.WorkerName} {item.WorkerSurname}")
-        </td>  
-        <td>  
-        @item.OfficeName  
-        </td>
-        <td>  
-        @item.Date.ToString("yyyy-MM-dd") 
-        </td>
-        <td>  
-        @item.Price  
-        </td>
-        <td>
-            1
-        </td>
-        </tr>  
-    }
+    <table id="t01" class="table table-sm table-striped table-bordered">
+        <thead>
+        <th>Transaction ID</th>
+        <th>Service</th>
+        <th>Worker</th>
+        <th>Office</th>
+        <th>Date</th>
+        <th>Aggregated Price</th>
+        <th>Count for the period</th>
+        </thead>
 
-    <tr>  
-        <td>  
-        - 
-        </td> 
-        <td>
-        -
-        </td>
-        <td>  
-        -
-        </td>  
-        <td>  
-        -  
-        </td>
-        <td>  
-        - 
-        </td>
-        <td>  
-        @group.Sum(p => p.Price)  
-        </td>
-        <td>
-            @group.Count()
-        </td>
-        </tr>  
-}
-  
-    </table> 
+        @foreach (var group in Model.TableData)
+        {
+            @foreach (var item in group)
+            {
+                <tr>
+                    <td>
+                        @item.TransactionId
+                    </td>
+                    <td>
+                        @item.InternetType
+                    </td>
+                    <td>
+                        @($"{item.WorkerName} {item.WorkerSurname}")
+                    </td>
+                    <td>
+                        @item.OfficeName
+                    </td>
+                    <td>
+                        @item.Date.ToString("yyyy-MM-dd")
+                    </td>
+                    <td>
+                        @item.Price
+                        zł
+                    </td>
+                    <td>
+                        1
+                    </td>
+                </tr>
+            }
+
+            <tr>
+                <td colspan="5">
+                    <b>
+                        @group.Select(p => p.InternetType).First()
+                        summary
+                    </b>
+                </td>
+                <td>
+                    <b>
+                    @group.Sum(p => p.Price)
+                    zł
+                    </b>
+                </td>
+                <td><b>
+                    @group.Count()
+                    </b>
+                </td>
+            </tr>
+        }
+        <tr>
+            <td colspan="5">
+                <b>
+                    Total summary
+                </b>
+            </td>
+            <td>
+                <b>
+                @Model.TableData.Sum(p => p.Sum(s => s.Price))
+                zł
+                </b>
+            </td>
+            <td><b>
+                @Model.TableData.Sum(p => p.Count())
+                </b>
+            </td>
+        </tr>
+    </table>
 </div>

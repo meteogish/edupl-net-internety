@@ -47,12 +47,12 @@ namespace Inter.Web.Database.Repositories
 
             if(filter.FinishDate == null || filter.FinishDate == DateTime.MinValue)
             {
-                filter.FinishDate = DateTime.Now.AddDays(200);
+                filter.FinishDate = DateTime.Now;
             }
 
             if(filter.StartDate == null || filter.StartDate == DateTime.MinValue)
             {
-                filter.StartDate = DateTime.Now.AddDays(-200);
+                filter.StartDate = DateTime.Now.AddDays(-30);
             }
 
             if(filter.OfficeId.HasValue)
