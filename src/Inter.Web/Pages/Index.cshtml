@@ -64,32 +64,62 @@
             <th>Office</th>
             <th>Date</th>
             <th>Aggregated Price</th>
+            <th>Count for the period</th>
         </thead>  
         
-@foreach (var item in Model.TableData)  
+@foreach (var group in Model.TableData)  
 {
-        <tr>  
-                        <td>  
-@item.TransactionId  
-</td> 
-<td>
-    @item.InternetType
-</td>
-            <td>  
-@($"{item.WorkerName} {item.WorkerSurname}")
-</td>  
-<td>  
-@item.OfficeName  
-</td>
- <td>  
-@item.Date.ToString("yyyy-MM-dd") 
-</td>
-<td>  
-@item.Price  
-</td>
-</tr>  
-  
-}  
+    @foreach (var item in group)
+    {
+                <tr>  
+                                <td>  
+        @item.TransactionId  
+        </td> 
+        <td>
+            @item.InternetType
+        </td>
+                    <td>  
+        @($"{item.WorkerName} {item.WorkerSurname}")
+        </td>  
+        <td>  
+        @item.OfficeName  
+        </td>
+        <td>  
+        @item.Date.ToString("yyyy-MM-dd") 
+        </td>
+        <td>  
+        @item.Price  
+        </td>
+        <td>
+            1
+        </td>
+        </tr>  
+    }
+
+    <tr>  
+        <td>  
+        - 
+        </td> 
+        <td>
+        -
+        </td>
+        <td>  
+        -
+        </td>  
+        <td>  
+        -  
+        </td>
+        <td>  
+        - 
+        </td>
+        <td>  
+        @group.Sum(p => p.Price)  
+        </td>
+        <td>
+            @group.Count()
+        </td>
+        </tr>  
+}
   
     </table> 
 </div>

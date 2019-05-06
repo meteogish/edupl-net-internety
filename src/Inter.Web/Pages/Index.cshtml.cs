@@ -15,7 +15,7 @@ namespace Inter.Web.Pages
     {
         private TransactionsRepository _transactionRepository;
 
-        public IEnumerable<TransactionInfoResult> TableData { get; private set; }
+        public IEnumerable<IGrouping<long, TransactionInfoResult>> TableData { get; private set; }
 
         public SelectList Offices { get; private set; }
 
@@ -55,22 +55,24 @@ namespace Inter.Web.Pages
                 FinishDate = filter.FinishDate ?? DateTime.Now;
             }
 
-            TableData = _transactionRepository
+            var data = _transactionRepository
                 .GetTransactionsInfo(filter);
 
-            var dt = TableData
+            TableData = data.GroupBy(x => x.InternetTypeId);
+            
+            var dt = data
                 .Select(td => new ViewModel(td.OfficeId, td.OfficeName))
                 .Distinct();
 
             Offices = new SelectList(dt
                 , nameof(ViewModel.Id), nameof(ViewModel.Name));
 
-            Workers = TableData
+            Workers = data
                 .Select(td => new ViewModel(td.WorkerId, $"{td.WorkerName} {td.WorkerSurname}"))
                 .Distinct()
                 .Select(vm => new SelectListItem(vm.Name, vm.Id.ToString())).ToList();
 
-            InternetTypes = TableData
+            InternetTypes = data
             .Select(td => new ViewModel(td.InternetTypeId, td.InternetType))
             .Distinct()
             .Select(vm => new SelectListItem(vm.Name, vm.Id.ToString())).ToList();
