@@ -64,7 +64,6 @@
         <th>Office</th>
         <th>Date</th>
         <th>Aggregated Price</th>
-        <th>Count for the period</th>
         </thead>
 
         @foreach (var group in Model.TableData)
@@ -91,45 +90,43 @@
                         @item.Price
                         zł
                     </td>
-                    <td>
-                        1
-                    </td>
                 </tr>
             }
 
             <tr>
-                <td colspan="5">
+                <td colspan="4">
                     <b>
                         @group.Select(p => p.InternetType).First()
                         summary
                     </b>
                 </td>
-                <td>
-                    <b>
-                    @group.Sum(p => p.Price)
-                    zł
+                <td><b>
+                    Sold: 
+                    @group.Count()
                     </b>
                 </td>
-                <td><b>
-                    @group.Count()
+                <td>
+                    <b>Sum:
+                    @group.Sum(p => p.Price)
+                    zł
                     </b>
                 </td>
             </tr>
         }
         <tr>
-            <td colspan="5">
+            <td colspan="4">
                 <b>
                     Total summary
                 </b>
             </td>
-            <td>
-                <b>
-                @Model.TableData.Sum(p => p.Sum(s => s.Price))
-                zł
+            <td><b>Sold:
+                @Model.TableData.Sum(p => p.Count())
                 </b>
             </td>
-            <td><b>
-                @Model.TableData.Sum(p => p.Count())
+            <td>
+                <b>Sum: 
+                @Model.TableData.Sum(p => p.Sum(s => s.Price))
+                zł
                 </b>
             </td>
         </tr>
